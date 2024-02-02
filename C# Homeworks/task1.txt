@@ -1,0 +1,48 @@
+using System;
+
+class KnightMoves
+{
+    static void Main()
+    {
+        int[,] chessboard = new int[8, 8];
+        int startRow = 3;
+        int startCol = 3;
+
+        ShowKnightMoves(chessboard, startRow, startCol);
+        DisplayChessboard(chessboard);
+    }
+
+    static void ShowKnightMoves(int[,] chessboard, int row, int col)
+    {
+        int[] moveRow = { 2, 1, -1, -2, -2, -1, 1, 2 };
+        int[] moveCol = { 1, 2, 2, 1, -1, -2, -2, -1 };
+
+        for (int i = 0; i < 8; i++)
+        {
+            int newRow = row + moveRow[i];
+            int newCol = col + moveCol[i];
+
+            if (IsValidMove(newRow, newCol))
+            {
+                chessboard[newRow, newCol] = 1;
+            }
+        }
+    }
+
+    static bool IsValidMove(int row, int col)
+    {
+        return (row >= 0 && row < 8 && col >= 0 && col < 8);
+    }
+
+    static void DisplayChessboard(int[,] chessboard)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Console.Write(chessboard[i, j].ToString().PadLeft(3) + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+}

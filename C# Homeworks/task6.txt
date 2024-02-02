@@ -1,0 +1,57 @@
+using System;
+
+class MatrixRandomFiller
+{
+    static void Main()
+    {
+        RandomMatrixFiller randomMatrixFiller = new RandomMatrixFiller(5, 5);
+        randomMatrixFiller.FillMatrix();
+        randomMatrixFiller.DisplayMatrix();
+    }
+}
+
+class RandomMatrixFiller
+{
+    private int[,] matrix;
+    private int rows;
+    private int cols;
+    private Random random;
+
+    public RandomMatrixFiller(int rows, int cols)
+    {
+        this.rows = rows;
+        this.cols = cols;
+        matrix = new int[rows, cols];
+        random = new Random();
+    }
+
+    public void FillMatrix()
+    {
+        int maxValue = rows * cols;
+
+        for (int i = 1; i <= maxValue; i++)
+        {
+            int row, col;
+
+            do
+            {
+                row = random.Next(rows);
+                col = random.Next(cols);
+            } while (matrix[row, col] != 0);
+
+            matrix[row, col] = i;
+        }
+    }
+
+    public void DisplayMatrix()
+    {
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Console.Write(matrix[i, j].ToString().PadLeft(4) + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+}

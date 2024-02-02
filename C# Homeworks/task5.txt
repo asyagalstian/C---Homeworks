@@ -1,0 +1,55 @@
+using System;
+
+class SaddlePoint
+{
+    static void Main()
+    {
+        int[,] matrix = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+
+        FindSaddlePoint(matrix);
+    }
+
+    static void FindSaddlePoint(int[,] matrix)
+    {
+        int rows = matrix.GetLength(0);
+        int cols = matrix.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            int rowMaxValue = int.MinValue;
+            int colIndex = -1;
+
+            for (int j = 0; j < cols; j++)
+            {
+                if (matrix[i, j] > rowMaxValue)
+                {
+                    rowMaxValue = matrix[i, j];
+                    colIndex = j;
+                }
+            }
+
+            bool isSaddlePoint = true;
+
+            for (int k = 0; k < rows; k++)
+            {
+                if (matrix[k, colIndex] < rowMaxValue)
+                {
+                    isSaddlePoint = false;
+                    break;
+                }
+            }
+
+            if (isSaddlePoint)
+            {
+                Console.WriteLine($"Saddle Point: {rowMaxValue}");
+                return;
+            }
+        }
+
+        Console.WriteLine("no");
+    }
+}

@@ -1,0 +1,75 @@
+using System;
+
+class QueensPlacement
+{
+    static int N = 8; // Size of the chessboard
+
+    static void Main()
+    {
+        int[,] chessboard = new int[N, N];
+
+        PlaceQueens(chessboard);
+
+        // Display the chessboard with queens
+        DisplayChessboard(chessboard);
+    }
+
+    static void PlaceQueens(int[,] chessboard)
+    {
+        Random rand = new Random();
+
+        for (int col = 0; col < N; col++)
+        {
+            // Find a random row for the queen in the current column
+            int row = rand.Next(N);
+
+            // Check if the randomly chosen position is safe
+            while (!IsSafe(chessboard, row, col))
+            {
+                row = rand.Next(N);
+            }
+
+            // Place the queen in the safe position
+            chessboard[row, col] = 1;
+        }
+    }
+
+    static bool IsSafe(int[,] chessboard, int row, int col)
+    {
+        // Check if there is a queen in the same row
+        for (int i = 0; i < col; i++)
+        {
+            if (chessboard[row, i] == 1)
+                return false;
+        }
+
+        // Check upper diagonal on left side
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+        {
+            if (chessboard[i, j] == 1)
+                return false;
+        }
+
+        // Check lower diagonal on left side
+        for (int i = row, j = col; i < N && j >= 0; i++, j--)
+        {
+            if (chessboard[i, j] == 1)
+                return false;
+        }
+
+        // The position is safe
+        return true;
+    }
+
+    static void DisplayChessboard(int[,] chessboard)
+    {
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                Console.Write(chessboard[i, j] + " ");
+            }
+            Console.WriteLine();
+        }
+    }
+}
