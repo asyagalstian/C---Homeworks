@@ -1,0 +1,49 @@
+
+using System;
+class QueensPlacement{
+    static int[,] board = new int[8, 8];
+    static bool IsSafe(int row, int col)    {
+        for (int i = 0; i < col; i++)        {
+            if (board[row, i] == 1)                return false;
+        }
+        for (int i = row, j = col; i >= 0 && j >= 0; i--, j--)        {
+            if (board[i, j] == 1)                return false;
+        }
+        for (int i = row, j = col; j >= 0 && i < 8; i++, j--)        {
+            if (board[i, j] == 1)                return false;
+        }
+        return true;    }
+    static bool SolveNQueens(int col)
+    {
+        if (col >= 8)            return true;
+        for (int i = 0; i < 8; i++)
+        {            if (IsSafe(i, col))
+            {                board[i, col] = 1;
+                if (SolveNQueens(col + 1))
+                    return true;
+                board[i, col] = 0;            }
+        }
+        return false;    }
+    static void DisplayBoard()
+    {        for (int i = 0; i < 8; i++)
+        {            for (int j = 0; j < 8; j++)
+            {                Console.Write(board[i, j] + " ");
+            }            Console.WriteLine();
+        }    }
+    static int Heuristic()
+    {        int heuristicValue = 0;
+        for (int col = 0; col < 8; col++)        {
+            int freeFields = 0;            for (int row = 0; row < 8; row++)
+            {                if (IsSafe(row, col))
+                    freeFields++;            }
+            heuristicValue += freeFields;            Console.WriteLine("Heuristic value for queen in column {0}: {1}", col, freeFields);
+        }        return heuristicValue;
+    }
+    static void Main(string[] args)    {
+        if (SolveNQueens(0))        {
+            Console.WriteLine("Solution found:");            DisplayBoard();
+            int heuristicValue = Heuristic();            Console.WriteLine("Total heuristic value: " + heuristicValue);
+        }        else
+        {            Console.WriteLine("Solution does not exist!");
+        }    }
+}
