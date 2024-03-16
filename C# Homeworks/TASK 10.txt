@@ -1,0 +1,158 @@
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+
+namespace LocalDataStorageWPF
+{
+    public class Person : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private int _id;
+        public int Id
+        {
+            get { return _id; }
+            set
+            {
+                _id = value;
+                OnPropertyChanged("Id");
+            }
+        }
+
+        private string _name;
+        public string Name
+        {
+            get { return _name; }
+            set
+            {
+                _name = value;
+                OnPropertyChanged("Name");
+            }
+        }
+
+        private int _age;
+        public int Age
+        {
+            get { return _age; }
+            set
+            {
+                _age = value;
+                OnPropertyChanged("Age");
+            }
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public partial class MainWindow : Window
+    {
+        private Person[] _people;
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            _people = new Person[0];
+        }
+
+        private void AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(idTextBox.Text, out int id) &&
+                !string.IsNullOrWhiteSpace(nameTextBox.Text) &&
+                int.TryParse(ageTextBox.Text, out int age))
+            {
+                Array.Resize(ref _people, _people.Length + 1);
+                _people[_people.Length - 1] = new Person { Id = id, Name = nameTextBox.Text, Age = age };
+                RefreshListView();
+            }
+            else
+            {
+                MessageBox.Show("Invalid input. Please enter valid values for ID, Name, and Age.");
+            }
+        }
+
+        private void RefreshListView()
+        {
+            peopleListView.ItemsSource = null;
+            peopleListView.ItemsSource = _people;
+        }
+
+        private void SortByAgeButton_Click(object sender, RoutedEventArgs e)
+        {
+            _people = _people.OrderBy(p => p.Age).ToArray();
+            RefreshListView();
+        }
+
+        private void SortByNameButton_Click(object sender, RoutedEventArgs e)
+        {
+            _people = _people.OrderBy(p => p.Name).ToArray();
+            RefreshListView();
+        }
+
+        private void SearchByNameButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(searchNameTextBox.Text))
+            {
+                var searchResult = _people.Where(p => p.Name.Equals(searchNameTextBox.Text)).ToArray();
+                if (searchResult.Length > 0)
+                {
+                    MessageBox.Show($"Found {searchResult.Length} record(s) with the name '{searchNameTextBox.Text}'.");
+                }
+                else
+                {
+                    MessageBox.Show($"No record found with the name '{searchNameTextBox.Text}'.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter a name to search.");
+            }
+        }
+
+        private void SearchByAgeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(searchAgeTextBox.Text, out int age))
+            {
+                var searchResult = _people.Where(p => p.Age == age).ToArray();
+                if (searchResult.Length > 0)
+                {
+                    MessageBox.Show($"Found {searchResult.Length} record(s) with the age '{age}'.");
+                }
+                else
+                {
+                    MessageBox.Show($"No record found with the age '{age}'.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter a valid age to search.");
+            }
+        }
+
+        private void RemoveByIdButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (int.TryParse(removeIdTextBox.Text, out int id))
+            {
+                var indexToRemove = Array.FindIndex(_people, p => p.Id == id);
+                if (indexToRemove != -1)
+                {
+                    _people = _people.Where((source, index) => index != indexToRemove).ToArray();
+                    RefreshListView();
+                    MessageBox.Show($"Record with ID '{id}' has been removed.");
+                }
+                else
+                {
+                    MessageBox.Show($"No record found with the ID '{id}'.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please enter a valid ID to remove.");
+            }
+        }
+    }
+}
