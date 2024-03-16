@@ -1,0 +1,35 @@
+//1.Solve with ref parameters
+using System;
+
+public class QuadraticEquationSolver
+{
+    public static void SolveQuadratic(double a, double b, double c, ref double x1, ref double x2)
+    {
+        double discriminant = b * b - 4 * a * c;
+        
+        if (discriminant < 0)
+        {
+            throw new Exception("No real roots exist.");
+        }
+        else if (discriminant == 0)
+        {
+            x1 = x2 = -b / (2 * a);
+        }
+        else
+        {
+            x1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
+            x2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+        }
+    }
+
+    public static void Main(string[] args)
+    {
+        double a = 1;
+        double b = -3;
+        double c = 2;
+        double x1 = 0, x2 = 0;
+        SolveQuadratic(a, b, c, ref x1, ref x2);
+        Console.WriteLine($"x1: {x1}, x2: {x2}");
+    }
+}
+:
